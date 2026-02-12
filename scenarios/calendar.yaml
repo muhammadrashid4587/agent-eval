@@ -1,0 +1,41 @@
+name: calendar_create_event
+description: "Agent should create a calendar event with correct details"
+system_prompt: "You are a calendar assistant. Help users manage their schedule."
+user_message: "Schedule a team standup meeting for tomorrow at 9:30 AM for 30 minutes in the Main Conference Room."
+available_tools:
+  - name: create_event
+    description: "Create a new calendar event"
+    parameters:
+      type: object
+      properties:
+        title:
+          type: string
+          description: "Event title"
+        start_time:
+          type: string
+          description: "Start time in ISO 8601 format"
+        duration_minutes:
+          type: integer
+          description: "Event duration in minutes"
+        location:
+          type: string
+          description: "Event location"
+      required: ["title", "start_time", "duration_minutes"]
+  - name: list_events
+    description: "List calendar events for a date range"
+    parameters:
+      type: object
+      properties:
+        start_date:
+          type: string
+          description: "Start date (YYYY-MM-DD)"
+        end_date:
+          type: string
+          description: "End date (YYYY-MM-DD)"
+      required: ["start_date"]
+expected:
+  - tool: create_event
+    args:
+      title: "Team Standup"
+      duration_minutes: 30
+      location: "Main Conference Room"

@@ -1,0 +1,23 @@
+name: weather_lookup
+description: "Agent should call the weather API for a specific city"
+system_prompt: "You are a helpful assistant with access to weather tools."
+user_message: "What's the weather like in Tokyo right now?"
+available_tools:
+  - name: get_current_weather
+    description: "Get current weather conditions for a location"
+    parameters:
+      type: object
+      properties:
+        location:
+          type: string
+          description: "City name or coordinates"
+        units:
+          type: string
+          enum: ["celsius", "fahrenheit"]
+          description: "Temperature units"
+      required: ["location"]
+expected:
+  - tool: get_current_weather
+    args:
+      location: "Tokyo"
+      units: "celsius"

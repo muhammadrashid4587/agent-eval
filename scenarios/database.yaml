@@ -1,0 +1,41 @@
+name: database_query
+description: "Agent should build and execute a SQL query using two tools"
+system_prompt: "You are a database assistant. First build the query, then execute it."
+user_message: "Find all active users who signed up in the last 30 days and return their emails."
+available_tools:
+  - name: build_sql_query
+    description: "Build a SQL query from natural language description"
+    parameters:
+      type: object
+      properties:
+        table:
+          type: string
+          description: "Target table name"
+        conditions:
+          type: string
+          description: "WHERE clause conditions in natural language"
+        columns:
+          type: string
+          description: "Comma-separated column names to SELECT"
+      required: ["table", "conditions", "columns"]
+  - name: execute_query
+    description: "Execute a SQL query against the database"
+    parameters:
+      type: object
+      properties:
+        query:
+          type: string
+          description: "SQL query string to execute"
+        limit:
+          type: integer
+          description: "Maximum rows to return"
+      required: ["query"]
+expected:
+  - tool: build_sql_query
+    args:
+      table: "users"
+      conditions: "active = true AND signup_date >= NOW() - INTERVAL '30 days'"
+      columns: "email"
+  - tool: execute_query
+    args:
+      query: "SELECT email FROM users WHERE active = true AND signup_date >= NOW() - INTERVAL '30 days'"

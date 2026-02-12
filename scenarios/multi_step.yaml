@@ -1,0 +1,50 @@
+name: research_and_summarize
+description: "Multi-step: search for information, fetch full content, then summarize"
+system_prompt: "You are a research assistant. Search for relevant sources, fetch their content, and provide a summary."
+user_message: "Find recent articles about transformer architecture improvements and summarize the key findings."
+available_tools:
+  - name: web_search
+    description: "Search the web for relevant results"
+    parameters:
+      type: object
+      properties:
+        query:
+          type: string
+          description: "Search query"
+        num_results:
+          type: integer
+          description: "Number of results to return"
+      required: ["query"]
+  - name: fetch_page
+    description: "Fetch and extract text content from a URL"
+    parameters:
+      type: object
+      properties:
+        url:
+          type: string
+          description: "URL to fetch"
+      required: ["url"]
+  - name: summarize_text
+    description: "Generate a concise summary of provided text"
+    parameters:
+      type: object
+      properties:
+        text:
+          type: string
+          description: "Text to summarize"
+        max_length:
+          type: integer
+          description: "Maximum summary length in words"
+      required: ["text"]
+expected:
+  - tool: web_search
+    args:
+      query: "transformer architecture improvements 2024"
+      num_results: 5
+  - tool: fetch_page
+    args:
+      url: "https://example.com/article"
+  - tool: summarize_text
+    args:
+      text: "Article content here"
+      max_length: 200

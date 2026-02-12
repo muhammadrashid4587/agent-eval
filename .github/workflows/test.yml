@@ -1,0 +1,44 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "agent-eval/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "agent-eval/**"
+
+defaults:
+  run:
+    working-directory: agent-eval
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Lint with ruff
+        run: ruff check agent_eval/ tests/
+
+      - name: Type check with mypy
+        run: mypy agent_eval/
+
+      - name: Run tests with coverage
+        run: pytest --cov=agent_eval --cov-report=term-missing --cov-fail-under=70

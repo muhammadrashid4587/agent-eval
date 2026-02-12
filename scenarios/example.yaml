@@ -1,0 +1,17 @@
+name: "Weather lookup"
+description: "Agent should call get_weather with correct city"
+system_prompt: "You are a helpful assistant with access to weather tools."
+user_message: "What's the weather in Tokyo?"
+available_tools:
+  - name: get_weather
+    description: "Get current weather for a city"
+    parameters:
+      type: object
+      properties:
+        city:
+          type: string
+      required: [city]
+expected:
+  - tool: get_weather
+    args:
+      city: "Tokyo"
